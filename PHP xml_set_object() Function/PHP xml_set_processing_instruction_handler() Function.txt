@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html>
+<body>
+
+<?php
+$parser=xml_parser_create();
+
+function char($parser,$data) {
+  echo $data;
+}
+
+function pi_handler($parser, $target, $data) {
+  echo "Target: $target<br>";
+  echo "Data: $data<br>";
+}
+
+xml_set_character_data_handler($parser,"char");
+// Set up PI handler
+xml_set_processing_instruction_handler($parser, "pi_handler");
+$fp=fopen("note_pi.xml","r");
+
+while ($data=fread($fp,4096)) {
+  xml_parse($parser,$data,feof($fp)) or
+  die (sprintf("XML Error: %s at line %d",
+  xml_error_string(xml_get_error_code($parser)),
+  xml_get_current_line_number($parser)));
+}
+xml_parser_free($parser);
+?>
+
+</body>
+</html>
+
+
+
+
+
+
+
+Target: xml-stylesheet
+Data: href="default.xsl" type="text/xml"
+Tove Jani Reminder Don't forget me this weekend!

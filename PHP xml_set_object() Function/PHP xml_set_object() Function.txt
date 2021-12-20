@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<?php
+class XMLParser
+{
+  private $parser;
+
+  function __construct() {
+    $this->parser = xml_parser_create();
+    xml_set_object($this->parser, $this);
+    xml_set_element_handler($this->parser, "start_tag", "end_tag");
+    xml_set_character_data_handler($this->parser, "cdata");
+  }
+
+  function __destruct() {
+    xml_parser_free($this->parser);
+    unset($this->parser);
+  }
+
+  function parse($data) {
+    xml_parse($this->parser, $data);
+  }
+
+  function start_tag($parser, $tag, $attributes) {
+    var_dump($tag, $attributes);
+  }
+
+  function cdata($parser, $cdata) {
+    var_dump($cdata);
+  }
+
+  function end_tag($parser, $tag) {
+    var_dump($tag);
+  }
+
+}
+
+$xml_parser = new XMLParser();
+$xml_parser->parse("<p id='test'>Hello World!</p>");
+?>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+string(1) "P" array(1) { ["ID"]=> string(4) "test" } string(12) "Hello World!" string(1) "P"
